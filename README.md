@@ -1,4 +1,4 @@
-pywikibot_minimal
-=================
+UAABOT
+======
 
-Minimum necessary to get pywikibot off the ground
+Code designed to handle EN.Wikipedia Usernames for Account Attention staleing logic
