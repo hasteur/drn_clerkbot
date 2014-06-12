@@ -80,10 +80,21 @@ class DRNClerkBot:
         sort_sig = sorted(applicable_signatures, 
             key = lambda signature: signature[1]
         )
-        return_parm['created'] = sort_sig[0][1]
-        return_parm['created_editor'] = sort_sig[0][0]
-        return_parm['last_updater'] = sort_sig[-1][0]
-        return_parm['last_updated'] = sort_sig[-1][1]
+        try:
+            return_parm['created'] = sort_sig[0][1]
+            return_parm['created_editor'] = sort_sig[0][0]
+        except:
+            return_parm['created'] = 'Unknown'
+            return_parm['created_editor'] = ''
+        try:
+            return_parm['last_updater'] = sort_sig[-1][0]
+            return_parm['last_updated'] = sort_sig[-1][1]
+        except:
+            return_parm['last_updater'] = ''
+            return_parm['last_updated'] = 'Unknown'
+
+        return_parm['last_volunteer'] = ''
+        return_parm['volunteer_update'] = 'Unknown'
         for signature in sort_sig:
             if signature[0] in self.volunteer_list:
                 return_parm['last_volunteer'] = signature[0]
@@ -98,7 +109,10 @@ class DRNClerkBot:
         regex += r"(?!.*?(?:User(?:\stalk)?\:|Special\:Contributions\/).*?)"
         regex += r".{,256}?(\d{2}:\d{2},\s\d{1,2}\s\w+\s\d{4}\s\(UTC\))"
         matches = re.findall(regex, text, re.U|re.I)
+        match_2 = re.findall(r"\{\{drn filing editor\|(?P<username>.+)\|(?P<stamp>.+)\}\}",text, re.U|re.I)
+        timestamp = datetime.datetime.strptime(match_2[0][1], "%H:%M, %d %B %Y (UTC)")
         signatures = []
+        signatures.append((match_2[0][0],timestamp))
         for userlink, stamp in matches:
             username = userlink.split("/", 1)[0].replace("_", " ").strip()
             username = username[0].upper() + username[1:]
@@ -124,6 +138,7 @@ class DRNClerkBot:
             new_text = re.sub("<!-- sig begin -->(.*?)<!-- sig end -->",
                               "<!-- sig begin -->~~~ at ~~~~~<!-- sig end -->",
                               new_text)
+            print new_text
             #status_chart.put(new_text,
             #    comment = "DRNClerkBot: Update on info",
             #    minorEdit=False,
