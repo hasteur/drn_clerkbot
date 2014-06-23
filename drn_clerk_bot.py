@@ -138,13 +138,12 @@ class DRNClerkBot:
             new_text = re.sub("<!-- sig begin -->(.*?)<!-- sig end -->",
                               "<!-- sig begin -->~~~ at ~~~~~<!-- sig end -->",
                               new_text)
-            print new_text
-            #status_chart.put(new_text,
-            #    comment = "DRNClerkBot: Update on info",
-            #    minorEdit=False,
-            #    botflag=True,
-            #    maxTries=1
-            #)
+            status_chart.put(new_text,
+                comment = "DRNClerkBot: Updating statistics for [[Wikipedia:DRN|dispute resolution noticeboard]]",
+                minorEdit=False,
+                botflag=True,
+                maxTries=1
+            )
 
         pass
 def main():
