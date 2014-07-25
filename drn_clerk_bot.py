@@ -11,7 +11,7 @@ class DRNClerkBot:
     STATUS_UNKNOWN = 0
     STATUS_NEW = 1
     STATUS_OPEN = 2
-    STATUS_STALE = 3
+    STATUS_STALE = 4
     STATUS_NEEDASSIST = 4
     STATUS_RESOLVED = 6
     STATUS_CLOSED = 7
@@ -19,8 +19,8 @@ class DRNClerkBot:
     ALIASES = {
         STATUS_NEW: ("",),
         STATUS_OPEN: ("open", "active", "inprogress"),
-        STATUS_STALE: ("stale",),
-        STATUS_NEEDASSIST: ("needassist", "review", "relist", "relisted"),
+        STATUS_STALE: (),
+        STATUS_NEEDASSIST: ("needassist", "review", "relist", "relisted","stale",),
         STATUS_RESOLVED: ("resolved", "resolve"),
         STATUS_CLOSED: ("closed", "close"),
         STATUS_FAILED: ("failed", "fail"),
