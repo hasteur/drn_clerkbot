@@ -59,9 +59,12 @@ class DRNClerkBot:
             stat_search = re.search("\s*\{\{"+tl_status_esc+ "\|?(.*?)\}\}",body,re.U)
             if not stat_search:
                 case_status = self.STATUS_NEW
-            for option, names in self.ALIASES.iteritems():
-                if stat_search.group(1).lower() in names:
-                    case_status = option
+            try:
+              for option, names in self.ALIASES.iteritems():
+                  if stat_search.group(1).lower() in names:
+                      case_status = option
+            except:
+                case_status = self.STATUS_NEW
             case_vitals = self.parse_case_vitals(body)
             case_vitals['topic'] = title
             case_vitals['status'] = case_status
@@ -125,7 +128,7 @@ class DRNClerkBot:
     def write_status(self):
         DRN_case_status = "{{DRN case status/header|small={{{small|}}}|collapsed={{{collapsed|}}}}}\n"
         for case in self.case_list:
-            row_string = """{{DRN case status/row|t=%(topic)s|d=%(topic)s|s=%(status)i|cu=%(created_editor)s|ct=%(created)s|vu=%(last_volunteer)s|vt=%(volunteer_update)s|mu=%(last_updater)s|mt=%(last_updated)s}}\n""" 
+            row_string = """{{DRN case status/row|t=%(topic)s|d=%(topic)s|s=%(status)i|cu=%(created_editor)s|ct={{DRNAgo|%(created)s}}|vu=%(last_volunteer)s|vt={{DRNAgo|%(volunteer_update)s}}|mu=%(last_updater)s|mt={{DRNAgo|%(last_updated)s}}}}\n""" 
             case_string = row_string % case
             DRN_case_status += case_string
         DRN_case_status += "{{DRN case_status/footer|small={{{small|}}}}}"
