@@ -16,6 +16,7 @@ class DRNClerkBot:
     STATUS_RESOLVED = 6
     STATUS_CLOSED = 7
     STATUS_FAILED = 8
+    STATUS_HOLD = 9
     ALIASES = {
         STATUS_NEW: ("",),
         STATUS_OPEN: ("open", "active", "inprogress"),
@@ -24,6 +25,7 @@ class DRNClerkBot:
         STATUS_RESOLVED: ("resolved", "resolve"),
         STATUS_CLOSED: ("closed", "close"),
         STATUS_FAILED: ("failed", "fail"),
+        STATUS_HOLD: ("hold"),
     }
     def __init__(self):
         self.site = pywikibot.getSite()
