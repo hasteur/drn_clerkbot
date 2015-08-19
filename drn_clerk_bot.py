@@ -65,6 +65,7 @@ class DRNClerkBot:
               for option, names in self.ALIASES.iteritems():
                   if stat_search.group(1).lower() in names:
                       case_status = option
+                      break
             except:
                 case_status = self.STATUS_NEW
             case_vitals = self.parse_case_vitals(body)
@@ -143,6 +144,13 @@ class DRNClerkBot:
             new_text = re.sub("<!-- sig begin -->(.*?)<!-- sig end -->",
                               "<!-- sig begin -->~~~ at ~~~~~<!-- sig end -->",
                               new_text)
+            status_chart.put(new_text,
+                comment = "DRNClerkBot: Updating statistics for [[Wikipedia:DRN|dispute resolution noticeboard]]",
+                minorEdit=False,
+                botflag=True,
+                maxTries=1
+            )
+        else:
             status_chart.put(new_text,
                 comment = "DRNClerkBot: Updating statistics for [[Wikipedia:DRN|dispute resolution noticeboard]]",
                 minorEdit=False,
