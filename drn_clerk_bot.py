@@ -83,15 +83,18 @@ class DRNClerkBot:
             'volunteer_update':''
         }
         applicable_signatures = self.read_signatures(case_body)
-        sort_sig = sorted(applicable_signatures, 
-            key = lambda signature: signature[1]
-        )
         try:
-            return_parm['created'] = sort_sig[0][1]
+            sort_sig = sorted(applicable_signatures, 
+                key = lambda signature: signature[1]
+            )
+            return_parm['created'] = '{{DRNAgo|%s}}' % sort_sig[0][1]
             return_parm['created_editor'] = sort_sig[0][0]
         except:
-            return_parm['created'] = 'Unknown'
-            return_parm['created_editor'] = ''
+            return_parm['created'] = "'''Unknown'''"
+            return_parm['created_editor'] = 'Example'
+            sort_sig = sorted(applicable_signatures[1:], 
+                key = lambda signature: signature[1]
+            )
         try:
             return_parm['last_updater'] = sort_sig[-1][0]
             return_parm['last_updated'] = sort_sig[-1][1]
@@ -116,9 +119,14 @@ class DRNClerkBot:
         regex += r".{,256}?(\d{2}:\d{2},\s\d{1,2}\s\w+\s\d{4}\s\(UTC\))"
         matches = re.findall(regex, text, re.U|re.I)
         match_2 = re.findall(r"\{\{drn filing editor\|(?P<username>.+)\|(?P<stamp>.+)\}\}",text, re.U|re.I)
-        timestamp = datetime.datetime.strptime(match_2[0][1], "%H:%M, %d %B %Y (UTC)")
         signatures = []
-        signatures.append((match_2[0][0],timestamp))
+        try:
+            timestamp = datetime.datetime.strptime(match_2[0][1], "%H:%M, %d %B %Y (UTC)")
+            signatures.append((match_2[0][0],timestamp))
+        except:
+            # Shit... We didn't find the filing editor template. Raise unhloy 
+            # stink
+            signatures.append(('Example','Unknown'))
         for userlink, stamp in matches:
             username = userlink.split("/", 1)[0].replace("_", " ").strip()
             username = username[0].upper() + username[1:]
@@ -131,7 +139,7 @@ class DRNClerkBot:
     def write_status(self):
         DRN_case_status = "{{DRN case status/header|small={{{small|}}}|collapsed={{{collapsed|}}}}}\n"
         for case in self.case_list:
-            row_string = """{{DRN case status/row|t=%(topic)s|d=%(topic)s|s=%(status)i|cu=%(created_editor)s|ct={{DRNAgo|%(created)s}}|vu=%(last_volunteer)s|vt={{DRNAgo|%(volunteer_update)s}}|mu=%(last_updater)s|mt={{DRNAgo|%(last_updated)s}}}}\n""" 
+            row_string = """{{DRN case status/row|t=%(topic)s|d=%(topic)s|s=%(status)i|cu=%(created_editor)s|ct=%(created)s|vu=%(last_volunteer)s|vt={{DRNAgo|%(volunteer_update)s}}|mu=%(last_updater)s|mt={{DRNAgo|%(last_updated)s}}}}\n""" 
             case_string = row_string % case
             DRN_case_status += case_string
         DRN_case_status += "{{DRN case_status/footer|small={{{small|}}}}}"
